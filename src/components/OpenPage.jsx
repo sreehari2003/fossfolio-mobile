@@ -1,11 +1,19 @@
 /* eslint-disable no-unused-expressions */
-import { Card, VStack, Box, Button, ButtonText } from "@gluestack-ui/themed";
+import {
+  Card,
+  VStack,
+  Box,
+  Button,
+  ButtonText,
+  Image as Img,
+} from "@gluestack-ui/themed";
 import { View, Image, StyleSheet, Text } from "react-native";
 
 import { useEvents } from "../hooks/useEvents";
 
 export const OpenPage = () => {
   const { eventData, isLoading } = useEvents();
+  console.log(eventData);
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -48,6 +56,18 @@ export const OpenPage = () => {
               </Text>
             </VStack>
           </Box>
+
+          <Img
+            mt={15}
+            size="lg"
+            width="100%"
+            height={400}
+            borderRadius="$none"
+            source={{
+              uri: el.coverImage,
+            }}
+          />
+
           <Button
             mt={10}
             size="md"

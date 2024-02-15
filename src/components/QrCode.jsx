@@ -1,10 +1,13 @@
 import { BarCodeScanner } from "expo-barcode-scanner";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Heading, Image, Card } from "react-native";
+
+import { apiHandler } from "../config/apiHandler";
 
 export function Qrcode() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [dataBody, setData] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -13,10 +16,19 @@ export function Qrcode() {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
-    console.log(data);
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  const handleBarCodeScanned = async ({ type, data: id }) => {
+    try {
+      const { data } = await apiHandler.get(`/events/ticket/${id}`);
+      console.log(data);
+      setData(data);
+      alert(
+        `Bar code with type ${type} and data ${data.data} has been scanned!`,
+      );
+    } catch {
+      console.log("ERROR");
+    } finally {
+      setScanned(true);
+    }
   };
 
   const renderCamera = () => {
@@ -39,6 +51,32 @@ export function Qrcode() {
       <View style={styles.container}>
         <Text style={styles.text}>Camera permission not granted</Text>
       </View>
+    );
+  }
+
+  if (dataBody) {
+    return (
+      <Card p="$5" borderRadius="$lg" maxWidth={360} m="$3">
+        <Text
+          fontSize="$sm"
+          fontStyle="normal"
+          fontFamily="$heading"
+          fontWeight="$normal"
+          lineHeight="$sm"
+          mb="$2"
+          sx={{
+            color: "$textLight700",
+            _dark: {
+              color: "$textDark200",
+            },
+          }}
+        >
+          May 15, 2023
+        </Text>
+        <Heading size="md" fontFamily="$heading" mb="$4">
+          The Power of Positive Thinking
+        </Heading>
+      </Card>
     );
   }
 
