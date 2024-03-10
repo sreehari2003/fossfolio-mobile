@@ -1,11 +1,21 @@
 import { BarCodeScanner } from "expo-barcode-scanner";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Heading, Image, Card } from "react-native";
+import {
+  Text,
+  Heading,
+  Image as Img,
+  Card,
+  View,
+  VStack,
+  Box,
+} from "@gluestack-ui/themed";
+import { StyleSheet } from "react-native";
 
 import { apiHandler } from "../config/apiHandler";
 
 export function Qrcode() {
   const [hasPermission, setHasPermission] = useState(null);
+  const [isError, setError] = useState(false);
   const [scanned, setScanned] = useState(false);
   const [dataBody, setData] = useState(null);
 
@@ -19,13 +29,11 @@ export function Qrcode() {
   const handleBarCodeScanned = async ({ type, data: id }) => {
     try {
       const { data } = await apiHandler.get(`/events/ticket/${id}`);
-      console.log(data);
-      setData(data);
-      alert(
-        `Bar code with type ${type} and data ${data.data} has been scanned!`,
-      );
-    } catch {
-      console.log("ERROR");
+      if(!data.data) throw new Error()
+      setData(data.data);
+      setError(false);
+    } catch (e) {
+      setError(true);
     } finally {
       setScanned(true);
     }
@@ -54,28 +62,44 @@ export function Qrcode() {
     );
   }
 
+  if (isError) {
+    return (
+      <Card p="$5" borderRadius="$lg" maxWidth={360} m="$3" mt={40}>
+      <View>
+        <Heading>Error Fetching the Ticket</Heading>
+      </View>
+      </Card>
+    );
+  }
+
   if (dataBody) {
     return (
-      <Card p="$5" borderRadius="$lg" maxWidth={360} m="$3">
-        <Text
-          fontSize="$sm"
-          fontStyle="normal"
-          fontFamily="$heading"
-          fontWeight="$normal"
-          lineHeight="$sm"
-          mb="$2"
-          sx={{
-            color: "$textLight700",
-            _dark: {
-              color: "$textDark200",
-            },
+      <Card p="$5" borderRadius="$lg" maxWidth={360} m="$3" mt={40}>
+        <Box flexDirection="row">
+          <VStack>
+          <Heading>{dataBody.name}</Heading>
+            <Text size="sm" fontFamily="$heading" mb="$1">
+              Event Date - {new Date(dataBody.eventDate).getDate()}-
+                {new Date(dataBody.eventDate).getMonth()}-
+                {new Date(dataBody.eventDate).getFullYear()}
+            </Text>
+            <Text size="sm" fontFamily="$heading" mb="$1">
+              {dataBody.location}
+            </Text>
+          </VStack>
+        </Box>
+
+        <Img
+          mt={15}
+          size="lg"
+          width="100%"
+          height={400}
+          borderRadius="$none"
+          alt="Event info image"
+          source={{
+            uri: dataBody.coverImage,
           }}
-        >
-          May 15, 2023
-        </Text>
-        <Heading size="md" fontFamily="$heading" mb="$4">
-          The Power of Positive Thinking
-        </Heading>
+        />
       </Card>
     );
   }

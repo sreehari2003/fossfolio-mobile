@@ -17,6 +17,7 @@ export const useEvents = () => {
 
   useEffect(() => {
     try {
+      if (eventData.length > 0) return;
       toggleLoading.on();
 
       (async () => {

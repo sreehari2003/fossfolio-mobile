@@ -13,7 +13,6 @@ import { useEvents } from "../hooks/useEvents";
 
 export const OpenPage = () => {
   const { eventData, isLoading } = useEvents();
-  console.log(eventData);
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -63,6 +62,7 @@ export const OpenPage = () => {
             width="100%"
             height={400}
             borderRadius="$none"
+            alt='Event info image'
             source={{
               uri: el.coverImage,
             }}
