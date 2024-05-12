@@ -3,9 +3,9 @@ import { Platform } from "react-native";
 
 const getBaseUrl = () => {
   if (Platform.OS === "android") {
-    return "http://192.168.1.33:8080/api"; // Android emulator
+    return "https://api.fossfolio.com/api"; // Android emulator
   } else {
-    return "http://localhost:8080/api"; // iOS simulator and others
+    return "https://api.fossfolio.com/api"; // iOS simulator and others
   }
 };
 
