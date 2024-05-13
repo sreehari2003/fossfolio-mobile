@@ -29,7 +29,7 @@ export function Qrcode() {
   const handleBarCodeScanned = async ({ type, data: id }) => {
     try {
       const { data } = await apiHandler.get(`/events/ticket/${id}`);
-      if(!data.data) throw new Error()
+      if (!data.data) throw new Error();
       setData(data.data);
       setError(false);
     } catch (e) {
@@ -65,9 +65,9 @@ export function Qrcode() {
   if (isError) {
     return (
       <Card p="$5" borderRadius="$lg" maxWidth={360} m="$3" mt={40}>
-      <View>
-        <Heading>Error Fetching the Ticket</Heading>
-      </View>
+        <View>
+          <Heading>Error Fetching the Ticket</Heading>
+        </View>
       </Card>
     );
   }
@@ -77,11 +77,11 @@ export function Qrcode() {
       <Card p="$5" borderRadius="$lg" maxWidth={360} m="$3" mt={40}>
         <Box flexDirection="row">
           <VStack>
-          <Heading>{dataBody.name}</Heading>
+            <Heading>{dataBody.name}</Heading>
             <Text size="sm" fontFamily="$heading" mb="$1">
               Event Date - {new Date(dataBody.eventDate).getDate()}-
-                {new Date(dataBody.eventDate).getMonth()}-
-                {new Date(dataBody.eventDate).getFullYear()}
+              {new Date(dataBody.eventDate).getMonth()}-
+              {new Date(dataBody.eventDate).getFullYear()}
             </Text>
             <Text size="sm" fontFamily="$heading" mb="$1">
               {dataBody.location}

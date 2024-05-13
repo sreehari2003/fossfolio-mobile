@@ -62,7 +62,7 @@ export const OpenPage = () => {
             width="100%"
             height={400}
             borderRadius="$none"
-            alt='Event info image'
+            alt="Event info image"
             source={{
               uri: el.coverImage,
             }}
